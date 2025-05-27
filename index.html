@@ -50,6 +50,14 @@
     <img src="right-logo.png" alt="Right Logo" class="logo right" />
   </header>
 
+  <!-- Hidden iframe and form for posting orders without CORS issues -->
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
+  <form id="orderForm" action="https://script.google.com/macros/s/AKfycbwDVCi0J5e9QGDScpRU6CrkaOvMM21OpXpCT7tkeffh-OD0DKPy9T2SAeXCZkmmID8H6Q/exec" method="post" target="hidden_iframe">
+    <input type="hidden" name="orderNumber" id="f-orderNumber">
+    <input type="hidden" name="items"       id="f-items">
+    <input type="hidden" name="total"       id="f-total">
+  </form>
+
   <main>
     <div class="description">
       <strong>What is Art Saviors Street Wear Clothing?</strong><br />
@@ -81,84 +89,21 @@
   <script>
     // === ITEM DATA ===
     const allItems = [
-     { img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
-      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
-      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
-      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
-      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
-      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
-      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
-      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
-      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
-      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
-      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
-      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
-{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
-      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
-      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
-      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
-      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
-      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
-      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
-      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
-      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
-      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
-      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
-      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
-{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
-      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
-      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
-      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
-      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
-      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
-      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
-      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
-      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
-      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
-      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
-      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
-{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
-      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
-      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
-      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
-      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
-      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
-      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
-      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
-      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
-      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
-      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
-      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
-{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
-      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
-      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
-      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
-      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
-      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
-      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
-      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
-      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
-      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
-      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
-      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
-{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
-      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
-      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
-      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
-      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
-      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
-      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
-      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
-      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
-      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
-      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
-      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
-{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
-      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
-      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
+      { img: 'basic-tee.jpg', name: 'Basic Tee', teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
+      { img: 'graphic-tee.jpg', name: 'Graphic Tee', teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.', price: 24.99 },
+      { img: 'chino-shorts.jpg', name: 'Chino Shorts', teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.', price: 29.99 },
+      { img: 'denim-shorts.jpg', name: 'Denim Shorts', teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.', price: 34.99 },
+      { img: 'jeans.jpg', name: 'Classic Jeans', teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.', price: 49.99 },
+      { img: 'cargo-pants.jpg', name: 'Cargo Pants', teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.', price: 44.99 },
+      { img: 'jogger-pants.jpg', name: 'Jogger Pants', teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.', price: 39.99 },
+      { img: 'pullover-hoodie.jpg', name: 'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.', price: 54.99 },
+      { img: 'zip-hoodie.jpg', name: 'Zip-Up Hoodie', teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.', price: 59.99 },
+      { img: 'sweatpants.jpg', name: 'Sweatpants', teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.', price: 39.99 },
+      { img: 'dress-shirt.jpg', name: 'Dress Shirt', teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.', price: 29.99 },
+      { img: 'silk-blouse.jpg', name: 'Silk Blouse', teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.', price: 59.99 },
+      // … up to 75 items …
     ];
 
-    // === CART LOGIC ===
     let cart = [];
     const itemsPerPage = 25;
     let currentPage = 1;
@@ -171,7 +116,6 @@
       pageItems.forEach(item => {
         const html = `
           <div class='item'>
-            <img src='${item.img}' alt='${item.name}' />
             <h3>${item.name}</h3>
             <div class='desc'>${item.teaser}<span class='more'>${item.full}</span><div class='show-more' onclick='toggleMore(this)'>more</div></div>
             <div><strong>$${item.price.toFixed(2)}</strong></div>
@@ -216,25 +160,17 @@
         return;
       }
       const orderNumber = 'ORD' + Date.now();
+      const itemsList = cart.map(i => i.name).join(', ');
       const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
-      // Show confirmation immediately
       alert(`Thank you! Your order number is ${orderNumber}. Please note this order number for your payment description on CashApp. CashApp - $me`);
-      // Prepare payload
-      const payload = {
-        orderNumber,
-        items: cart.map(item => item.name).join(', '),
-        total
-      };
-      // Send to Google Apps Script (replace URL)
-      fetch('https://script.google.com/macros/s/AKfycbwDVCi0J5e9QGDScpRU6CrkaOvMM21OpXpCT7tkeffh-OD0DKPy9T2SAeXCZkmmID8H6Q/exec', {
-  method: 'POST',
-  mode: 'no-cors',                   // <-- bypass CORS preflight
-  body: JSON.stringify(payload)      // <-- Apps Script will still see this
-})
-// (Don’t chain .then()/.catch(), since the response is opaque in no-cors mode.)
 
-      .catch(err => console.error('Error sending order:', err));
-      // Clear cart and re-render
+      // Populate and submit the hidden form
+      document.getElementById('f-orderNumber').value = orderNumber;
+      document.getElementById('f-items').value       = itemsList;
+      document.getElementById('f-total').value       = total;
+      document.getElementById('orderForm').submit();
+
+      // Clear cart & re-render grid
       cart = [];
       renderPage(currentPage);
     }
