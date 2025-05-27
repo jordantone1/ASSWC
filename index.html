@@ -227,10 +227,12 @@
       };
       // Send to Google Apps Script (replace URL)
       fetch('https://script.google.com/macros/s/AKfycbwDVCi0J5e9QGDScpRU6CrkaOvMM21OpXpCT7tkeffh-OD0DKPy9T2SAeXCZkmmID8H6Q/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
+  method: 'POST',
+  mode: 'no-cors',                   // <-- bypass CORS preflight
+  body: JSON.stringify(payload)      // <-- Apps Script will still see this
+});
+// (Don’t chain .then()/.catch(), since the response is opaque in no-cors mode.)
+
       .catch(err => console.error('Error sending order:', err));
       // Clear cart and re-render
       cart = [];
