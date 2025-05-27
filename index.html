@@ -230,7 +230,7 @@
   method: 'POST',
   mode: 'no-cors',                   // <-- bypass CORS preflight
   body: JSON.stringify(payload)      // <-- Apps Script will still see this
-});
+})
 // (Don’t chain .then()/.catch(), since the response is opaque in no-cors mode.)
 
       .catch(err => console.error('Error sending order:', err));
