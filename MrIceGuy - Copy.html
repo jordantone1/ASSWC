@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Art Saviors Street Wear Clothing</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
+    header { background: #ff7f7f; text-align: center; padding: 20px 0; position: relative; }
+    header img.logo { width: 50px; height: auto; position: absolute; top: 50%; transform: translateY(-50%); }
+    header img.left { left: 10px; }
+    header img.right { right: 10px; }
+    header h1 { font-size: 2rem; margin: 0; color: #ffffff; padding: 0 60px; }
+
+    main { padding: 20px; max-width: 1200px; margin: 0 auto; }
+    .description, .hours { margin-bottom: 20px; font-size: 1rem; text-align: center; }
+
+    .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+    .item { background: #ffffff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+    .item img { width: 100%; height: auto; border-radius: 6px; }
+    .item h3 { margin: 10px 0 5px; font-size: 1rem; }
+    .item .desc { font-size: 0.9rem; }
+    .more { display: none; color: #555; }
+    .show-more { color: #007bff; cursor: pointer; font-size: 0.85rem; }
+
+    .add-btn { margin-top: 8px; padding: 5px 10px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+
+    #cart-summary { margin: 20px 0; text-align: center; font-size: 1rem; }
+    #cart-summary button { margin-left: 10px; padding: 6px 12px; background: #ffc107; border: none; border-radius: 4px; cursor: pointer; }
+
+    .pagination { text-align: center; margin-top: 30px; flex-wrap: wrap; display: flex; justify-content: center; gap: 10px; }
+    .pagination button { padding: 6px 12px; cursor: pointer; border: none; background: #ff7f7f; color: white; border-radius: 4px; font-size: 0.95rem; }
+
+    footer { text-align: center; background: #eee; padding: 15px; margin-top: 40px; font-size: 0.95rem; }
+
+    @media (max-width: 768px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.5rem; padding: 0 40px; }
+      header img.logo { width: 40px; }
+      .description, .hours { font-size: 0.95rem; }
+      .item h3 { font-size: 0.95rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="left-logo.png" alt="Left Logo" class="logo left" />
+    <h1>Art Saviors Street Wear Clothing</h1>
+    <img src="right-logo.png" alt="Right Logo" class="logo right" />
+  </header>
+
+  <main>
+    <div class="description">
+      <strong>What is Art Saviors Street Wear Clothing?</strong><br />
+      Art Saviors Street Wear Clothing is....
+    </div>
+
+    <div class="hours">
+      <strong>Your Items will be shipped within 72 Hours</strong><br />
+    </div>
+
+    <div id="cart-summary">Cart: <span id="cart-count">0</span> items — Total: $<span id="cart-total">0.00</span><button id="checkout-btn" onclick="checkout()">Checkout</button></div>
+
+    <div class="grid" id="item-grid"></div>
+
+    <div class="pagination">
+      <button onclick="changePage(-1)">&laquo; Prev</button>
+      <button onclick="goToPage(1)">1</button>
+      <button onclick="goToPage(2)">2</button>
+      <button onclick="goToPage(3)">3</button>
+      <button onclick="changePage(1)">Next &raquo;</button>
+    </div>
+  </main>
+
+  <footer>
+    <div>email@gmail.com <--- Email Us Your Order Number For Updates</div>
+    <div>You Can Also Call: (555) 123-4567</div>
+  </footer>
+
+  <script>
+    // === ITEM DATA ===
+    const allItems = [
+     { img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
+      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
+      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
+      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
+      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
+      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
+      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
+      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
+      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
+      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
+      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
+      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
+{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
+      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
+      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
+      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
+      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
+      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
+      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
+      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
+      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
+      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
+      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
+      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
+{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
+      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
+      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
+      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
+      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
+      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
+      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
+      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
+      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
+      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
+      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
+      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
+{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
+      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
+      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
+      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
+      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
+      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
+      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
+      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
+      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
+      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
+      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
+      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
+{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
+      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
+      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
+      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
+      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
+      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
+      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
+      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
+      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
+      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
+      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
+      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
+{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
+      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
+      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
+      { img: 'denim-shorts.jpg',name: 'Denim Shorts',     teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.',                price: 34.99 },
+      { img: 'jeans.jpg',       name: 'Classic Jeans',     teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.',                price: 49.99 },
+      { img: 'cargo-pants.jpg', name: 'Cargo Pants',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with multiple utility pockets.',              price: 44.99 },
+      { img: 'jogger-pants.jpg',name: 'Jogger Pants',     teaser: 'Soft, stretchy, casual, athletic, comfortable...', full: ' with elastic cuffs.',                        price: 39.99 },
+      { img: 'pullover-hoodie.jpg',name:'Pullover Hoodie', teaser: 'Cozy, warm, versatile, casual, comfy...', full: ' with adjustable drawstring hood.',             price: 54.99 },
+      { img: 'zip-hoodie.jpg',  name: 'Zip-Up Hoodie',     teaser: 'Practical, cozy, stylish, casual, warm...', full: ' featuring full-length zipper.',                price: 59.99 },
+      { img: 'sweatpants.jpg',  name: 'Sweatpants',        teaser: 'Soft, cozy, relaxed, casual, stretchy...', full: ' perfect for lounging and workouts.',          price: 39.99 },
+      { img: 'dress-shirt.jpg', name: 'Dress Shirt',      teaser: 'Crisp, tailored, formal, comfortable, classic...', full: ' ideal for office or events.',                  price: 29.99 },
+      { img: 'silk-blouse.jpg', name: 'Silk Blouse',      teaser: 'Elegant, smooth, lightweight, luxurious, feminine...', full: ' perfect for special occasions.',            price: 59.99 },
+{ img: 'basic-tee.jpg',   name: 'Basic Tee',        teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 19.99 },
+      { img: 'graphic-tee.jpg', name: 'Graphic Tee',      teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.',           price: 24.99 },
+      { img: 'chino-shorts.jpg',name: 'Chino Shorts',     teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.',                   price: 29.99 },
+    ];
+
+    // === CART LOGIC ===
+    let cart = [];
+    const itemsPerPage = 25;
+    let currentPage = 1;
+
+    function renderPage(page) {
+      const grid = document.getElementById('item-grid');
+      grid.innerHTML = '';
+      const start = (page - 1) * itemsPerPage;
+      const pageItems = allItems.slice(start, start + itemsPerPage);
+      pageItems.forEach(item => {
+        const html = `
+          <div class='item'>
+            <img src='${item.img}' alt='${item.name}' />
+            <h3>${item.name}</h3>
+            <div class='desc'>${item.teaser}<span class='more'>${item.full}</span><div class='show-more' onclick='toggleMore(this)'>more</div></div>
+            <div><strong>$${item.price.toFixed(2)}</strong></div>
+            <button class='add-btn' onclick='addToCart("${item.name}", ${item.price})'>Add to cart</button>
+          </div>`;
+        grid.insertAdjacentHTML('beforeend', html);
+      });
+      updateCartDisplay();
+    }
+
+    function changePage(delta) {
+      const maxPage = Math.ceil(allItems.length / itemsPerPage);
+      const newPage = currentPage + delta;
+      if (newPage >= 1 && newPage <= maxPage) {
+        currentPage = newPage;
+        renderPage(currentPage);
+      }
+    }
+
+    function goToPage(page) {
+      const maxPage = Math.ceil(allItems.length / itemsPerPage);
+      if (page >= 1 && page <= maxPage) {
+        currentPage = page;
+        renderPage(currentPage);
+      }
+    }
+
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      updateCartDisplay();
+    }
+
+    function updateCartDisplay() {
+      document.getElementById('cart-count').textContent = cart.length;
+      const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+      document.getElementById('cart-total').textContent = total;
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        alert('Your cart is empty.');
+        return;
+      }
+      const orderNumber = 'ORD' + Date.now();
+      const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+      // Show confirmation immediately
+      alert(`Thank you! Your order number is ${orderNumber}. Please note this order number for your payment description on CashApp. CashApp - $me`);
+      // Prepare payload
+      const payload = {
+        orderNumber,
+        items: cart.map(item => item.name).join(', '),
+        total
+      };
+      // Send to Google Apps Script (replace URL)
+      fetch('https://script.google.com/macros/s/AKfycbwDVCi0J5e9QGDScpRU6CrkaOvMM21OpXpCT7tkeffh-OD0DKPy9T2SAeXCZkmmID8H6Q/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .catch(err => console.error('Error sending order:', err));
+      // Clear cart and re-render
+      cart = [];
+      renderPage(currentPage);
+    }
+
+    function toggleMore(el) {
+      const more = el.previousElementSibling;
+      more.style.display = more.style.display === 'inline' ? 'none' : 'inline';
+      el.textContent = more.style.display === 'inline' ? 'less' : 'more';
+    }
+
+    // Initial render
+    renderPage(currentPage);
+  </script>
+</body>
+</html>
+
