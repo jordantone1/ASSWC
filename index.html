@@ -295,12 +295,22 @@
     }
 
     function checkout() {
-      document.getElementById('f-orderNumber').value = Date.now();
-      document.getElementById('f-items').value = JSON.stringify(cart);
-      document.getElementById('f-total').value = cart.total.toFixed(2);
-      document.getElementById('orderForm').submit();
-      alert('Thank you! Your order number is ${orderNumber}. Please note this order number for your payment description on CashApp. CashApp - $me. Please also add shipping address to the description so I know where to ship the items - Unless physically coming to pick up.');
-    }
+  // generate a single order number
+  const orderNumber = Date.now().toString();
+
+  // populate the hidden fields
+  document.getElementById('f-orderNumber').value = orderNumber;
+  document.getElementById('f-items').value       = JSON.stringify(cart);
+  document.getElementById('f-total').value       = cart.total.toFixed(2);
+
+  // show the alert with the real orderNumber
+  alert(`Thank you! Your order number is ${orderNumber}.
+Please note this order number for your payment description on CashApp. CashApp - $me.
+Please also add shipping address to the description so I know where to ship the items – unless you’re picking up.`);
+
+  // then submit the form
+  document.getElementById('orderForm').submit();
+}
 
     renderItems();
   </script>
