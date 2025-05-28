@@ -79,6 +79,8 @@
       <button onclick="goToPage(1)">1</button>
       <button onclick="goToPage(2)">2</button>
       <button onclick="goToPage(3)">3</button>
+      <button onclick="goToPage(4)">4</button>
+      <button onclick="goToPage(5)">5</button>
       <button onclick="changePage(1)">Next &raquo;</button>
     </div>
   </main>
@@ -297,13 +299,10 @@
       document.getElementById('f-items').value = JSON.stringify(cart);
       document.getElementById('f-total').value = cart.total.toFixed(2);
       document.getElementById('orderForm').submit();
-      alert('Order submitted!');
+      alert('Thank you! Your order number is ${orderNumber}. Please note this order number for your payment description on CashApp. CashApp - $me. Please also add shipping address to the description so I know where to ship the items - Unless physically coming to pick up.');
     }
 
     renderItems();
   </script>
 </body>
 </html>
-
-
-
