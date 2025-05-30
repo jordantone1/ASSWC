@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Art Saviors Street Wear Clothing</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
+    body { zoom: 120%; transform-origin: top lef; font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
     header { background: #ff7f7f; text-align: center; padding: 20px 0; position: relative; }
     header img.logo { width: 75px; height: 75px; position: absolute; top: 50%; transform: translateY(-50%); }
     header img.left { left: 10px; }
@@ -17,7 +17,13 @@
 
     .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
     .item { background: #ffffff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
-    .item img { width: 100%; height: auto; border-radius: 6px; }
+
+    /* zoom container */
+    .img-zoom-container { overflow: hidden; position: relative; }
+    .zoomable { width: 100%; height: auto; border-radius: 6px; transition: transform 0.2s ease; }
+    .img-zoom-container.zoom-active .zoomable { cursor: grab; }
+    .img-zoom-container.zoom-active .zoomable:active { cursor: grabbing; }
+
     .item h3 { margin: 10px 0 5px; font-size: 1rem; }
     .item .desc { font-size: 0.9rem; }
     .more { display: none; color: #555; }
@@ -28,7 +34,7 @@
     #cart-summary { margin: 20px 0; text-align: center; font-size: 1rem; }
     #cart-summary button { margin-left: 10px; padding: 6px 12px; background: #ffc107; border: none; border-radius: 4px; cursor: pointer; }
 
-    .pagination { text-align: center; margin-top: 30px; flex-wrap: wrap; display: flex; justify-content: center; gap: 10px; }
+    .pagination { text-align: center; margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
     .pagination button { padding: 6px 12px; cursor: pointer; border: none; background: #ff7f7f; color: white; border-radius: 4px; font-size: 0.95rem; }
 
     footer { text-align: center; background: #eee; padding: 15px; margin-top: 40px; font-size: 0.95rem; }
@@ -44,6 +50,7 @@
   </style>
 </head>
 <body>
+
   <header>
     <img src="https://i.ibb.co/2Y1P79JM/Rogue-Thread-Logo.png"
       alt="Left Logo" class="logo left" />
@@ -70,7 +77,7 @@
       <strong>Your Items will be shipped within 72 Hours</strong><br />
     </div>
 
-    <div id="cart-summary">Cart: <span id="cart-count">0</span> items — Total: $<span id="cart-total">0.00</span><button id="checkout-btn" onclick="checkout()">Checkout</button></div>
+    <div id="cart-summary">Cart: <span id="cart-count">0</span> items — Total: $<span id="cart-total">0.00</span><button onclick="checkout()">Checkout</button></div>
 
     <div class="grid" id="item-grid"></div>
 
@@ -93,168 +100,96 @@
   <script>
     // === ITEM DATA ===
     const allItems = [
-      {
-        img: 'https://i.ibb.co/ZRLBtf1h/Gon-Killua-Green-Shirt.png',
-        name: 'Gon & Killua as Teenagers Graphic Tee Green',
-        teaser: 'Soft, comfortable, versatile, lightweight, breathable...',
-        full: ' perfect for everyday wear and layering.',
-        price: 39.95
-      },
-      {
-        img: 'https://files.tapstitch.com/popshowroom/material/custom_printing/571f1a147f06473aab9f852e8011322d.png',
-        name: 'Gon & Killua as Teenagers Graphic Tee Black',
-        teaser: 'Soft, comfortable, versatile, lightweight, breathable...',
-        full: ' perfect for everyday wear and layering.',
-        price: 39.95
-      },
-       {
-        img: 'https://i.ibb.co/MkKntkPQ/Hx-H-Sweatshirt.png',
-        name: 'Gon Rage HxH Sweatshirt',
-        teaser: 'Soft, comfortable, versatile, heavy, breathable...',
-        full: ' perfect for everyday wear and layering.',
-        price: 49.95
-      },
-      {
-        img: 'https://ci3.googleusercontent.com/meips/ADKq_Nb5G1xMFks-RdxHrxOGMYbWNdTsb7CqMZ4fDzDFNb09lvmHBCmFUzNmyBkz71yFbHaizrK7oD38JbFZ-dpxyzDKYa9RXFs10kWBGpi3TYKmXNr6u_m-LIV1E7QhhVWfl8WmBWs0s_jBXNi1FqmqFpCCeuDuduj-qmXgmQ0FT5pKDt4Udob8nNrpC9UeBeWeHZoB2h0Ef-tnSneUDPgQqVS0qw_F3t5FuVZqBtJGDSPVA5t90Y0H_5Q6OHLPFcp0DThLnZqdExaqUh_D9hg4FPmMC5HO5wK0DoloIT42ASxG7_DmlzSgE_kxjpcNcw=s0-d-e1-ft#https://www.rushordertees.com/design/resources/scripts/ZoomImage.php?ext=jpg&height=500&scale=1&src=8409691_f&watermark=false&width=500&x=270&y=300&x=275&y=300&width=250&height=250&ext=jpg&scale=.55&watermark=false',
-        name: 'Tyranazilla Graphic Tee',
-        teaser: 'Stylish, printed, casual, trendy, expressive...',
-        full: ' featuring unique artwork designs.',
-        price: 40.00
-      },
-      {
-        img: 'https://i.ibb.co/GvdDxnjV/Hx-H-Shorts.png',
-        name: 'HxH Shorts',
-        teaser: 'Smart, casual, durable, lightweight, tailored...',
-        full: ' ideal for summer outings.',
-        price: 39.99
-      },
-      {
-        img: 'https://i.ibb.co/0VZP0TxR/Hx-H-Sweats.png',
-        name: 'HxH Sweats',
-        teaser: 'Smart, casual, durable, lightweight, tailored...',
-        full: ' ideal for outings.',
-        price: 39.99
-      },
-      {
-        img: 'https://i.ibb.co/Sbp5r1f/Choso-Shorts.png',
-        name: 'Choso Shorts',
-        teaser: 'Rugged, classic, casual, versatile, durable...',
-        full: ' perfect for laid-back style.',
-        price: 34.99
-      },
-      {
-        img: 'https://files.tapstitch.com/popshowroom/material/custom_printing/62749d3ad8194328a85339c3280c9b9b.png',
-        name: 'Alchemist Sigil Graphic Tee',
-        teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...',
-        full: ' made from premium denim.',
-        price: 49.99
-      },
-      {
-        img: 'https://files.tapstitch.com/popshowroom/material/custom_printing/fcca3b92d48d450aa189406180cc570a.png',
-        name: 'Choso Inspired Logo',
-        teaser: 'Functional, roomy, durable, stylish, trendy...',
-        full: ' with custom Choso logo.',
-        price: 34.99
-      },
-       {
-        img: 'https://files.tapstitch.com/popshowroom/material/custom_printing/c5ecab25f5b54b18a1a704c4b1886d58.png',
-        name: 'Mahoraga Graphic Tee',
-        teaser: 'Functional, roomy, durable, stylish, trendy...',
-        full: ' and custom.',
-        price: 34.99
-      },
-      {
-        img: 'https://ci3.googleusercontent.com/meips/ADKq_Nb7-1oVg4TC16wNRFDU73y0y7UQXcBLVn9G7g2hlzM4SECHa5_54mRRZMq5wxpaLaQabWwjPyy_88pDynouKjLF3onUILlVzHCk_FooWzuImXQHug182MyEPrBWhKBgvMpTA5lJmkOLS1o1ip2IJJDHPSdqvQg-YLU2hbqsWNmkT5jzYzssl0g6biP8suHGihPerMZBgNLxPVER6z15Ck7yQvjFlnAmsOD38Kbs2V7nN1q6EX4kfcD9gM7Xg5Vk75GnNDEjcU6Mp5Qz1CxgWkitB5vLgHBKmq74sdSOLOjY0mGx1Zc7PzOfm-7DdA=s0-d-e1-ft#https://www.rushordertees.com/design/resources/scripts/ZoomImage.php?ext=jpg&height=500&scale=1&src=8452806_f&watermark=false&width=500&x=270&y=300&x=275&y=300&width=250&height=250&ext=jpg&scale=.55&watermark=false',
-        name: 'Custom JJK Graphic Tee',
-        teaser: 'Stylish, printed, casual, trendy, expressive...',
-        full: ' featuring unique artwork designs.',
-        price: 34.99
-      },
-      
-      {
-        img: 'https://ci3.googleusercontent.com/meips/ADKq_NbONef_h7HipRI94U9jyOsLXA4fjbDf6J0B_dUjTgiQyi6P_qqgFqh2ZtYnwXlu-7kf_UHrblQRL-5bdWtELkf6qE01NV_R6FzRiYOmqIZBcTPKlYZJ5XtUJvjefgw_xAJXtlc9UvU2d74PEavLiLz8lWpsyCHiJC0rYLgZB7yYaQSJ4vLkffBu3Ts_FgtD8OEnQGlmPOkkLmKlLRguEwi5jTnvEgRScBMyrXAP8cvlyDO4jLuhb6mnQ8tuzumfpkB7JVS6k7JCm5K6bcJhLIH4pvvfWOO26h4Mc2BCjOKe6jFMJ06FtiXnt1oVBw=s0-d-e1-ft#https://www.rushordertees.com/design/resources/scripts/ZoomImage.php?ext=jpg&height=500&scale=1&src=8452740_f&watermark=false&width=500&x=270&y=300&x=275&y=300&width=250&height=250&ext=jpg&scale=.55&watermark=false',
-        name: 'Custom JJK2 Graphic Tee',
-        teaser: 'Stylish, printed, casual, trendy, expressive...',
-        full: ' featuring unique artwork designs.',
-        price: 34.99
-      },
-    
+      { img: 'https://i.ibb.co/ZRLBtf1h/Gon-Killua-Green-Shirt.png',       name: 'Gon & Killua as Teenagers Graphic Tee Green', teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 39.95 },
+      { img: 'https://files.tapstitch.com/popshowroom/material/custom_printing/571f1a147f06473aab9f852e8011322d.png', name: 'Gon & Killua as Teenagers Graphic Tee Black', teaser: 'Soft, comfortable, versatile, lightweight, breathable...', full: ' perfect for everyday wear and layering.', price: 39.95 },
+      { img: 'https://i.ibb.co/MkKntkPQ/Hx-H-Sweatshirt.png',               name: 'Gon Rage HxH Sweatshirt',   teaser: 'Soft, comfortable, versatile, heavy, breathable...', full: ' perfect for everyday wear and layering.', price: 49.95 },
+      { img: 'https://ci3.googleusercontent.com/meips/ADKq_Nb5G1xMFks-RdxHrxOGMYbWNdTsb7CqMZ4fDzDFNb09lvmHBCmFUzNmyBkz71yFbHaizrK7oD38JbFZ-dpxyzDKYa9RXFs10kWBGpi3TYKmXNr6u_m-LIV1E7QhhVWfl8WmBWs0s_jBXNi1FqmqFpCCeuDuduj-qmXgmQ0FT5pKDt4Udob8nNrpC9UeBeWeHZoB2h0Ef-tnSneUDPgQqVS0qw_F3t5FuVZqBtJGDSPVA5t90Y0H_5Q6OHLPFcp0DThLnZqdExaqUh_D9hg4FPmMC5HO5wK0DoloIT42ASxG7_DmlzSgE_kxjpcNcw=s0-d-e1-ft', name: 'Tyranazilla Graphic Tee', teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.', price: 40.00 },
+      { img: 'https://i.ibb.co/GvdDxnjV/Hx-H-Shorts.png',                   name: 'HxH Shorts',                 teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for summer outings.', price: 39.99 },
+      { img: 'https://i.ibb.co/0VZP0TxR/Hx-H-Sweats.png',                   name: 'HxH Sweats',                 teaser: 'Smart, casual, durable, lightweight, tailored...', full: ' ideal for outings.', price: 39.99 },
+      { img: 'https://i.ibb.co/Sbp5r1f/Choso-Shorts.png',                   name: 'Choso Shorts',               teaser: 'Rugged, classic, casual, versatile, durable...', full: ' perfect for laid-back style.', price: 34.99 },
+      { img: 'https://files.tapstitch.com/popshowroom/material/custom_printing/62749d3ad8194328a85339c3280c9b9b.png', name: 'Alchemist Sigil Graphic Tee', teaser: 'Comfortable, timeless, sturdy, versatile, relaxed...', full: ' made from premium denim.', price: 49.99 },
+      { img: 'https://files.tapstitch.com/popshowroom/material/custom_printing/fcca3b92d48d450aa189406180cc570a.png', name: 'Choso Inspired Logo',        teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' with custom Choso logo.', price: 34.99 },
+      { img: 'https://files.tapstitch.com/popshowroom/material/custom_printing/c5ecab25f5b54b18a1a704c4b1886d58.png', name: 'Mahoraga Graphic Tee',      teaser: 'Functional, roomy, durable, stylish, trendy...', full: ' and custom.', price: 34.99 },
+      { img: 'https://ci3.googleusercontent.com/meips/ADKq_Nb7-1oVg4TC16wNRFDU73y0y7UQXcBLVn9G7g2hlzM4SECHa5_54mRRZMq5wxpaLaQabWwjPyy_88pDynouKjLF3onUILlVzHCk_FooWzuImXQHug182MyEPrBWhKBgvMpTA5lJmkOLS1o1ip2IJJDHPSdqvQg-YLU2hbqsWNmkT5jzYzssl0g6biP8suHGihPerMZBgNLxPVER6z15Ck7yQvjFlnAmsOD38Kbs2V7nN1q6EX4kfcD9gM7Xg5Vk75GnNDEjcU6Mp5Qz1CxgWkitB5vLgHBKmq74sdSOLOjY0mGx1Zc7PzOfm-7DdA=s0-d-e1-ft', name: 'Custom JJK Graphic Tee',   teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.', price: 34.99 },
+      { img: 'https://ci3.googleusercontent.com/meips/ADKq_NbONef_h7HipRI94U9jyOsLXA4fjbDf6J0B_dUjTgiQyi6P_qqgFqh2ZtYnwXlu-7kf_UHrblQRL-5bdWtELkf6qE01NV_R6FzRiYOmqIZBcTPKlYZJ5XtUJvjefgw_xAJXtlc9UvU2d74PEavLiLz8lWpsyCHiJC0rYLgZB7yYaQSJ4vLkffBu3Ts_FgtD8OEnQGlmPOkkLmKlLRguEwi5jTnvEgRScBMyrXAP8cvlyDO4jLuhb6mnQ8tuzumfpkB7JVS6k7JCm5K6bcJhLIH4pvvfWOO26h4Mc2BCjOKe6jFMJ06FtiXnt1oVBw=s0-d-e1-ft', name: 'Custom JJK2 Graphic Tee',  teaser: 'Stylish, printed, casual, trendy, expressive...', full: ' featuring unique artwork designs.', price: 34.99 }
     ];
 
-    // pagination & rendering logic
-    let currentPage = 1;
-    const itemsPerPage = 15;
-
+    // pagination
+    let currentPage = 1, itemsPerPage = 15;
     function renderItems() {
       const grid = document.getElementById('item-grid');
       grid.innerHTML = '';
-      const start = (currentPage - 1) * itemsPerPage;
-      const paged = allItems.slice(start, start + itemsPerPage);
-      paged.forEach(item => {
+      allItems.slice((currentPage-1)*itemsPerPage, currentPage*itemsPerPage)
+      .forEach(item => {
         const div = document.createElement('div');
         div.className = 'item';
         div.innerHTML = `
-          <img src="${item.img}" alt="${item.name}" />
+          <div class="img-zoom-container">
+            <img class="zoomable" src="${item.img}" alt="${item.name}" />
+          </div>
           <h3>${item.name}</h3>
-          <p class="desc">${item.teaser}<span class="more">${item.full}</span>
-            <span class="show-more">...more</span>
-          </p>
+          <p class="desc">${item.teaser}<span class="more">${item.full}</span><span class="show-more">...more</span></p>
           <div>$${item.price.toFixed(2)}</div>
-          <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+          <button class="add-btn" onclick="addToCart('${item.name}',${item.price})">Add to Cart</button>
         `;
         grid.appendChild(div);
       });
-      document.querySelectorAll('.show-more').forEach(el => {
-        el.onclick = () => {
-          el.previousElementSibling.style.display = 'inline';
-          el.style.display = 'none';
-        };
+      document.querySelectorAll('.show-more').forEach(el=>el.onclick=()=>{
+        el.previousElementSibling.style.display='inline';
+        el.style.display='none';
       });
-      document.getElementById('cart-count').innerText = cart.count;
-      document.getElementById('cart-total').innerText = cart.total.toFixed(2);
+      document.getElementById('cart-count').innerText=cart.items.length;
+      document.getElementById('cart-total').innerText=cart.total.toFixed(2);
+    }
+    function changePage(d){ currentPage=Math.min(Math.max(1,currentPage+d),Math.ceil(allItems.length/itemsPerPage)); renderItems(); }
+    function goToPage(n){ currentPage=n; renderItems(); }
+
+    // cart
+    const cart={items:[],total:0};
+    function addToCart(n,p){ cart.items.push({name:n,price:p}); cart.total+=p; renderItems(); }
+    function checkout(){
+      const num=Date.now().toString();
+      document.getElementById('f-orderNumber').value=num;
+      document.getElementById('f-items').value=JSON.stringify(cart.items);
+      document.getElementById('f-total').value=cart.total.toFixed(2);
+      alert(`Thank you! Your order number is ${num}.\n\nPlease note it for your CashApp payment, and include your shipping address in the description so I know where to ship — unless you’ll pick up in person.`);
+      document.getElementById('orderForm').submit();
     }
 
-    function changePage(delta) {
-      const max = Math.ceil(allItems.length / itemsPerPage);
-      currentPage = Math.min(Math.max(1, currentPage + delta), max);
-      renderItems();
-    }
-
-    function goToPage(n) {
-      currentPage = n;
-      renderItems();
-    }
-
-    // cart logic
-    const cart = {
-  items: [],
-  total: 0
-};
-
-function addToCart(name, price) {
-  // push each chosen item onto cart.items
-  cart.items.push({ name, price });
-  cart.total += price;
-  renderItems();
-}
-
-function checkout() {
-  const orderNumber = Date.now().toString();
-  document.getElementById('f-orderNumber').value = orderNumber;
-
-  // 2) stringify just the items array
-  document.getElementById('f-items').value = JSON.stringify(cart.items);
-
-  document.getElementById('f-total').value = cart.total.toFixed(2);
-
-  alert(
-    `Thank you! Your order number is ${orderNumber}.\n\n` +
-    `Please note it for your CashApp payment, and include your shipping address ` +
-    `in the description so I know where to ship — unless you’ll pick up in person.`
-  );
-
-  document.getElementById('orderForm').submit();
-}
+    // zoom & pan — only on the clicked image!
+    let dragging=false, startX=0, startY=0, curX=0, curY=0, currentImg=null;
+    document.addEventListener('click', e=>{
+      if (!e.target.classList.contains('zoomable')) return;
+      const img = e.target;
+      const c = img.parentElement;
+      c.classList.toggle('zoom-active');
+      if(c.classList.contains('zoom-active')){
+        currentImg=img;
+        img.style.transform='scale(4.6) translate(0,0)';
+        curX=curY=0;
+      } else {
+        img.style.transform='scale(1)';
+        currentImg=null;
+      }
+    });
+    document.addEventListener('pointerdown', e=>{
+      if (!e.target.classList.contains('zoomable')||!e.target.parentElement.classList.contains('zoom-active')) return;
+      dragging=true;
+      currentImg=e.target;
+      startX=e.clientX-curX;
+      startY=e.clientY-curY;
+      e.target.setPointerCapture(e.pointerId);
+    });
+    document.addEventListener('pointermove', e=>{
+      if(!dragging||!currentImg) return;
+      curX=e.clientX-startX; curY=e.clientY-startY;
+      currentImg.style.transform=`scale(1.6) translate(${curX}px,${curY}px)`;
+    });
+    document.addEventListener('pointerup', e=>{
+      if(!dragging) return;
+      dragging=false;
+      if(currentImg) currentImg.releasePointerCapture(e.pointerId);
+    });
 
     renderItems();
   </script>
