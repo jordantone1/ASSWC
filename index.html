@@ -157,18 +157,28 @@
       cart.total = 0;
       renderItems();
     }
-    function checkout(){
-      const num = Date.now().toString();
-      document.getElementById('f-orderNumber').value = num;
-      document.getElementById('f-items').value = JSON.stringify(cart.items);
-      document.getElementById('f-total').value = cart.total.toFixed(2);
-      alert(
-        `Thank you! Your order number is ${num}.\n\n`+
-        `Please note it for your CashApp payment, and include your shipping address `+
-        `in the description so I know where to ship — unless you’ll pick up in person.`
-      );
-      document.getElementById('orderForm').submit();
-    }
+     function checkout(){
+  const num = Date.now().toString();
+  document.getElementById('f-orderNumber').value = num;
+  document.getElementById('f-items').value       = JSON.stringify(cart.items);
+  document.getElementById('f-total').value       = cart.total.toFixed(2);
+
+  alert(
+    `Thank you! Your order number is ${num}.\n\n`+
+    `Please note it for your CashApp payment, and include your shipping address `+
+    `in the description so I know where to ship — unless you’ll pick up in person.`
+  );
+
+  // submit to Google Sheets
+  document.getElementById('orderForm').submit();
+
+  // ←— **RESET** the cart
+  cart.items = [];
+  cart.total = 0;
+
+  // ←— update the UI
+  renderItems();
+}
 
     // zoom & pan — only on the clicked image!
     let dragging=false, startX=0, startY=0, curX=0, curY=0, currentImg=null;
