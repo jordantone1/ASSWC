@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rogue Thread Street Wear Clothing</title>
   <style>
-    body { zoom: 130%; transform-origin: top lef; font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
+    body { zoom: 130%; transform-origin: top left; font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f8f8f8; }
     header { background: #ff7f7f; text-align: center; padding: 20px 0; position: relative; }
     header img.logo { width: 75px; height: 75px; position: absolute; top: 50%; transform: translateY(-50%); }
     header img.left { left: 10px; }
@@ -77,7 +77,11 @@
       <strong>Your Items will be shipped within 72 Hours</strong><br />
     </div>
 
-    <div id="cart-summary">Cart: <span id="cart-count">0</span> items — Total: $<span id="cart-total">0.00</span><button onclick="checkout()">Checkout</button></div>
+    <div id="cart-summary">
+      Cart: <span id="cart-count">0</span> items — Total: $<span id="cart-total">0.00</span>
+      <button onclick="checkout()">Checkout</button>
+      <button onclick="clearCart()">Clear Cart</button>
+    </div>
 
     <div class="grid" id="item-grid"></div>
 
@@ -119,40 +123,50 @@
     function renderItems() {
       const grid = document.getElementById('item-grid');
       grid.innerHTML = '';
-      allItems.slice((currentPage-1)*itemsPerPage, currentPage*itemsPerPage)
-      .forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.innerHTML = `
-          <div class="img-zoom-container">
-            <img class="zoomable" src="${item.img}" alt="${item.name}" />
-          </div>
-          <h3>${item.name}</h3>
-          <p class="desc">${item.teaser}<span class="more">${item.full}</span><span class="show-more">...more</span></p>
-          <div>$${item.price.toFixed(2)}</div>
-          <button class="add-btn" onclick="addToCart('${item.name}',${item.price})">Add to Cart</button>
-        `;
-        grid.appendChild(div);
-      });
+      allItems
+        .slice((currentPage-1)*itemsPerPage, currentPage*itemsPerPage)
+        .forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'item';
+          div.innerHTML = `
+            <div class="img-zoom-container">
+              <img class="zoomable" src="${item.img}" alt="${item.name}" />
+            </div>
+            <h3>${item.name}</h3>
+            <p class="desc">${item.teaser}<span class="more">${item.full}</span><span class="show-more">...more</span></p>
+            <div>$${item.price.toFixed(2)}</div>
+            <button class="add-btn" onclick="addToCart('${item.name}',${item.price})">Add to Cart</button>
+          `;
+          grid.appendChild(div);
+        });
       document.querySelectorAll('.show-more').forEach(el=>el.onclick=()=>{
         el.previousElementSibling.style.display='inline';
         el.style.display='none';
       });
-      document.getElementById('cart-count').innerText=cart.items.length;
-      document.getElementById('cart-total').innerText=cart.total.toFixed(2);
+      document.getElementById('cart-count').innerText = cart.items.length;
+      document.getElementById('cart-total').innerText = cart.total.toFixed(2);
     }
     function changePage(d){ currentPage=Math.min(Math.max(1,currentPage+d),Math.ceil(allItems.length/itemsPerPage)); renderItems(); }
     function goToPage(n){ currentPage=n; renderItems(); }
 
     // cart
-    const cart={items:[],total:0};
-    function addToCart(n,p){ cart.items.push({name:n,price:p}); cart.total+=p; renderItems(); }
+    const cart = { items: [], total: 0 };
+    function addToCart(n,p){ cart.items.push({name:n,price:p}); cart.total += p; renderItems(); }
+    function clearCart(){
+      cart.items = [];
+      cart.total = 0;
+      renderItems();
+    }
     function checkout(){
-      const num=Date.now().toString();
-      document.getElementById('f-orderNumber').value=num;
-      document.getElementById('f-items').value=JSON.stringify(cart.items);
-      document.getElementById('f-total').value=cart.total.toFixed(2);
-      alert(`Thank you! Your order number is ${num}.\n\nPlease note it for your CashApp payment, and include your shipping address in the description so I know where to ship — unless you’ll pick up in person.`);
+      const num = Date.now().toString();
+      document.getElementById('f-orderNumber').value = num;
+      document.getElementById('f-items').value = JSON.stringify(cart.items);
+      document.getElementById('f-total').value = cart.total.toFixed(2);
+      alert(
+        `Thank you! Your order number is ${num}.\n\n`+
+        `Please note it for your CashApp payment, and include your shipping address `+
+        `in the description so I know where to ship — unless you’ll pick up in person.`
+      );
       document.getElementById('orderForm').submit();
     }
 
@@ -164,30 +178,30 @@
       const c = img.parentElement;
       c.classList.toggle('zoom-active');
       if(c.classList.contains('zoom-active')){
-        currentImg=img;
-        img.style.transform='scale(4.6) translate(0,0)';
-        curX=curY=0;
+        currentImg = img;
+        img.style.transform = 'scale(1.6) translate(0,0)';
+        curX = curY = 0;
       } else {
-        img.style.transform='scale(1)';
-        currentImg=null;
+        img.style.transform = 'scale(1)';
+        currentImg = null;
       }
     });
     document.addEventListener('pointerdown', e=>{
       if (!e.target.classList.contains('zoomable')||!e.target.parentElement.classList.contains('zoom-active')) return;
-      dragging=true;
-      currentImg=e.target;
-      startX=e.clientX-curX;
-      startY=e.clientY-curY;
+      dragging = true;
+      currentImg = e.target;
+      startX = e.clientX - curX;
+      startY = e.clientY - curY;
       e.target.setPointerCapture(e.pointerId);
     });
     document.addEventListener('pointermove', e=>{
       if(!dragging||!currentImg) return;
-      curX=e.clientX-startX; curY=e.clientY-startY;
-      currentImg.style.transform=`scale(1.6) translate(${curX}px,${curY}px)`;
+      curX = e.clientX - startX; curY = e.clientY - startY;
+      currentImg.style.transform = `scale(1.6) translate(${curX}px,${curY}px)`;
     });
     document.addEventListener('pointerup', e=>{
       if(!dragging) return;
-      dragging=false;
+      dragging = false;
       if(currentImg) currentImg.releasePointerCapture(e.pointerId);
     });
 
